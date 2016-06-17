@@ -14,8 +14,8 @@ define( [
 				qDimensions: [],
 				qMeasures: [],
 				qInitialDataFetch: [{
-					qWidth: 10,
-					qHeight: 100
+					qWidth: 4,
+					qHeight: 500
 				}]
 			}
 		},
@@ -139,7 +139,7 @@ define( [
 					});
 
                 var newDataMatrix;
-                console.log(layout);
+
                 if (dimensionLabels.length > 1)
                 	newDataMatrix = doubleDimension (layout,dimensionLabels,measureLabels);
                 else

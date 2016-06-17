@@ -1,12 +1,13 @@
 function singleDimension(layout,dimensionLabels,measureLabels) {
 	// body...
-	console.log(layout);
+
 	var newMatrix = [];
 
 
 		// I'm going to loop over the first dimension
 		var colors=[];
 		colors = layout.vars.bar.fillColor.split(",");
+		console.log(colors);
 
         var data = makeSingleDimension (layout.qHyperCube.qDataPages[0].qMatrix, 
         	                            layout.qHyperCube.qDimensionInfo[0].qFallbackTitle, 
@@ -33,32 +34,43 @@ function doubleDimension (layout,dimensionLabels,measureLabels) {
 		// I'm going to loop over the first dimension
 	var colors=[];
 	colors = layout.vars.bar.fillColor.split(",");
+	var dimNum=0;
+	console.log(colors);
 
     var dimPre = '';
-
+    var orderDim = layout.qHyperCube.qEffectiveInterColumnSortOrder[0];
+    console.log(orderDim);
 
     $.each(layout.qHyperCube.qDataPages[0].qMatrix, function(key, row){
-    	
+    	console.log(colors[dimNum]);
 
-    	if(row[0].qText != dimPre) {
+
+    	if(row[orderDim].qText != dimPre) {
     		console.log("Gruppo : "+dimPre);
 
-	        var SingleData = makeSingleDimension (data, 
-	        	                            dimPre, 
-	        	                            colors[1],
-	        	                            1, 
-	        	                            1
-	        	                            );
-	        newMatrix.push(SingleData);
+    		if(dimPre != '') {
+		        var SingleData = makeSingleDimension (data, 
+		        	                            dimPre, 
+		        	                            colors[dimNum++],
+		        	                            1, 
+		        	                            1
+		        	                            );
+		        newMatrix.push(SingleData);
+	        }
 
 
-    		dimPre = row[0].qText;  
+    		dimPre = row[orderDim].qText;  
     		data = [];	
     	}
     	tmpRow = [];
-    	tmpRow.push(row[1]);  
+    	if(orderDim == 1)
+    	    tmpRow.push(row[0]);
+    	else
+    	    tmpRow.push(row[1]);
+
     	tmpRow.push(row[2]);  
     	data.push(tmpRow);
+    	//dimNum++;
 
     });
 
@@ -68,12 +80,12 @@ function doubleDimension (layout,dimensionLabels,measureLabels) {
 
 function makeSingleDimension (ArrayValue, dimName, color,numDim, numMes) {
 
-//	console.log("ArrayValue");
-//	console.log(ArrayValue);
+	//console.log(dimName);
+	//console.log(ArrayValue);
 
 	var data={};
 
-	//	console.log(numDim +" "+ numMes);
+		console.log("color");
 		var data = {
 			type: "bar",
 			name: dimName,
@@ -96,10 +108,11 @@ function makeSingleDimension (ArrayValue, dimName, color,numDim, numMes) {
 				mes.push(row[i].qText);
 			}
 
-			var myData = {y: mes[0]/1000000, label : dim[numDim-1]};
+			var myData = {y: mes[0]/1, label : dim[numDim-1]};
 				data.dataPoints.push(myData);
 		});
 
+		console.log(data);
 	return data;
 }
 
